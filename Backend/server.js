@@ -1,58 +1,52 @@
-import dotenv from 'dotenv'
-import express from 'express'
-import connectDB from './db/db.js'
-import cloud from './db/cloudinary.js'
-import fileUpload from 'express-fileupload'
-import cors from 'cors'
-dotenv.config()
-// import router from './router.js'
-const app = express()
-app.use(
-    cors({
-        origin: ["http://localhost:5173","http://localhost:5174"],
-        credentials: true,
-    })
-);
-app.use(cookieParser())
-app.use(express.json());
-import auth from "./routes/auth.route.js"
-import complaint from "./routes/complaint.route.js"
-import user from "./routes/user.route.js"
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
-import department from "./routes/department.route.js"
-import feedback from "./routes/feedback.route.js"
+import connectDB from "./db/db.js";
 
-app.use(fileUpload({
-    useTempFiles: true,
-    tempFileDir: '/tmp/'
-}));
+// routes
+import userRoutes from "./routes/user.route.js";
+import complaintRoutes from "./routes/complaint.route.js";
 
-// Mounting Api routes
-app.use("/api/v1/auth", auth);
-app.use("/api/v1/complaint", complaint);
-app.use("/api/v1/user", user);
-app.use('/api/v1/department', department);
-app.use('/api/v1/feedback', feedback);
+dotenv.config();
 
+const app = express();
+
+/* =====================
+   DATABASE CONNECTION
+===================== */
+connectDB();
+
+/* =====================
+   MIDDLEWARES
+===================== */
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(cookieParser());
+
+/* =====================
+   ROUTES
+===================== */
+app.use("/api/users", userRoutes);
+app.use("/api/complaints", complaintRoutes);
+
+/* =====================
+   TEST ROUTE
+===================== */
 app.get("/", (req, res) => {
-    res.send("<h1>Home Page</h2>")
-})
-// cloudinary connection
-cloud()
+  res.json({
+    success: true,
+    message: "Backend running on Vercel",
+  });
+});
 
-//DB connection
-connectDB().then(() => {
-    app.on("error", () => {
-        console.log("Express app not able to talk: ", error)
-        throw error
-    })
-    app.listen(process.env.PORT, () => {
-        console.log(`Server is listning at ${process.env.PORT}`)
-    })
-
-}).catch(err => {
-    console.log("MongoDb connection Error!! ", err)
-})
-
-
-
+/* =====================
+   EXPORT APP (NO listen)
+===================== */
+export default app;
