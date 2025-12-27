@@ -1,57 +1,29 @@
+import { NavLink } from "react-router-dom";
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
-import { useContext } from 'react';
-
-const Sidebar = () => {
-  // Get account type from context
-  const role = useContext(AppContext).role || localStorage.getItem("role");
-
-  // console.log(role)
-  // role === null ? role = localStorage.getItem(role) : null
-  // Define routes based on account type
-  const routes = {
-    Admin: [
-      { path: '/admin/panel', label: 'AdminPanel' },
-      { path: '/admin/user', label: 'User' },
-      { path: '/browse/account', label: 'Account' },
-    ],
-    Ordinary: [
-      { path: '/browse/card', label: 'Dashboard' },
-      { path: '/browse/complaints', label: 'Complaints' },
-      { path: '/browse/notify', label: 'Notifications' },
-      { path: '/browse/account', label: 'Account' },
-    ],
-    Agent: [
-      { path: '/browse/card', label: 'Dashboard' },
-      { path: '/browse/complaints', label: 'Complaints' },
-      { path: '/browse/notify', label: 'Notifications' },
-      { path: '/browse/account', label: 'Account' },
-    ],
-  };
-
-  // Get the specific routes for the current account type
-  const currentRoutes = routes[role] || [];
+export default function Sidebar() {
+  const linkClass = ({ isActive }) =>
+    `block rounded px-3 py-2 text-sm transition
+     ${isActive ? "bg-indigo-100 text-indigo-700" : "hover:bg-indigo-50"}`;
 
   return (
-    <div
-      style={{ transform: 'translate(0%, 0%)' }}
-      className="w-64 bg-gray-800 text-white h-[150%] flex flex-col absolute"
-    >
-      <div className="p-8">
-        <ul className="space-y-8 ">
-          {currentRoutes.map((route, index) => (
-            <Link to={route.path} key={index}>
-              <li className="text-2xl font-md text-blue-300 my-8 hover:text-white cursor-pointer">
-                {route.label}
-              </li>
-            </Link>
-          ))}
-        </ul>
-      </div>
+    <div className="h-full bg-white p-6">
+      <h2 className="mb-6 text-xl font-bold text-indigo-600">
+        ReflexCMS
+      </h2>
+
+      <nav className="space-y-2">
+        <NavLink to="/admin/panel" className={linkClass}>
+          Admin Panel
+        </NavLink>
+
+        <NavLink to="/admin/user" className={linkClass}>
+          Users
+        </NavLink>
+
+        <NavLink to="/admin/account" className={linkClass}>
+          Account
+        </NavLink>
+      </nav>
     </div>
   );
-};
-
-export default Sidebar;
+}

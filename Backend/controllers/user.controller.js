@@ -4,7 +4,7 @@
 // import { User } from '../models/user.model';
 import { User } from "../models/user.model.js";
 import { OTP } from "../models/otp.model.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { decrypt } from "../utiles/cipher.js";
 
@@ -59,7 +59,7 @@ const signup = async (req, res) => {
 
     // retrieve most recent otp from db
     const recentOtp = await OTP.findOne({ email })
-      .sort({ createrAt: -1 })
+      .sort({ createdAt: -1 })
       .limit(1);
     console.log("recentOtp", recentOtp);
     if (!recentOtp) {
@@ -280,6 +280,57 @@ const updateUserPassword = async (req, res) => {
   }
 };
 
+//updating user account type (Admin only)
+const updateUserAccountType = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { accountType } = req.body;
+    const { accountType: adminAccountType } = req.user;
+
+    // Only Admin can update account types
+    if (adminAccountType !== "Admin") {
+      return res.status(403).json({ 
+        success: false, 
+        message: "Only Admin can update user account types." 
+      });
+    }
+
+    // Validate account type
+    const validAccountTypes = ["Ordinary", "Admin", "Agent", "Warden", "Employee", "DeputyProvost", "Provost"];
+    if (!validAccountTypes.includes(accountType)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Invalid account type." 
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { accountType },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found!" 
+      });
+    }
+
+    res.status(200).json({ 
+      success: true,
+      message: "User account type updated successfully", 
+      user: updatedUser 
+    });
+  } catch (err) {
+    console.error("Error occurred updating user account type:", err);
+    res.status(500).json({ 
+      success: false,
+      message: "Error occurred while updating user account type" 
+    });
+  }
+};
+
 //Deleting a single user
 const deleteUserById = async (req, res) => {
   try {
@@ -302,5 +353,6 @@ export {
   updateUserById,
   deleteUserById,
   updateUserPassword,
+  updateUserAccountType,
 };
 

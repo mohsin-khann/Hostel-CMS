@@ -37,9 +37,9 @@ export default function Navbar() {
                 href={item.href}
                 className={classNames(
                     item.current
-                        ? "bg-gray-900 text-white"
-                        : "font-bold text-gray-300 hover:bg-gray-700 hover:text-white",
-                    isMobile ? "block px-3 py-2 text-base" : "px-3 py-2 text-xl",
+                        ? "bg-blue-600 text-white"
+                        : "font-medium text-slate-900 hover:bg-blue-600 hover:text-white",
+                    isMobile ? "block px-3 py-2 text-base" : "px-3 py-2 text-lg",
                     "rounded-md transition duration-300"
                 )}
                 aria-current={item.current ? "page" : undefined}
@@ -50,14 +50,14 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-gray-800">
+        <nav className="bg-gradient-to-r from-blue-50 to-white border-b border-blue-100">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
                     {/* Mobile menu button */}
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         <button
                             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white transition duration-300"
+                            className="inline-flex items-center justify-center p-2 rounded-md text-slate-700 hover:text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-600 transition duration-300"
                             aria-expanded={isMobileMenuOpen}
                         >
                             <span className="sr-only">Open main menu</span>
@@ -82,8 +82,8 @@ export default function Navbar() {
                     {/* Logo and Navigation Links */}
                     <div className="flex flex-1 items-center justify-between">
                         <div className="flex-shrink-0">
-                            <h2 className="font-bold text-white text-4xl">
-                                Reflex<span className="text-blue-600">CMS</span>
+                            <h2 className="font-semibold text-slate-900 text-2xl tracking-tight">
+                                Reflex<span className="text-slate-900">CMS</span>
                             </h2>
                         </div>
 
@@ -93,14 +93,14 @@ export default function Navbar() {
                             {isLoggedIn ? (
                                 <button
                                     onClick={handleLogout}
-                                    className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-transparent hover:border-2 transition duration-300"
+                                    className="inline-flex items-center justify-center h-10 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white border border-indigo-600 shadow hover:from-blue-700 hover:to-indigo-700 transition"
                                 >
                                     Logout
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleLogin}
-                                    className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-transparent hover:border-2 transition duration-300"
+                                    className="inline-flex items-center justify-center h-10 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white border border-indigo-600 shadow hover:from-blue-700 hover:to-indigo-700 transition"
                                 >
                                     Login
                                 </button>
@@ -120,14 +120,14 @@ export default function Navbar() {
                         {isLoggedIn ? (
                             <button
                                 onClick={handleLogout}
-                                className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-transparent hover:border-2 transition duration-300"
+                                className="inline-flex items-center justify-center h-10 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white border border-indigo-600 shadow w-full hover:from-blue-700 hover:to-indigo-700 transition"
                             >
                                 Logout
                             </button>
                         ) : (
                             <button
                                 onClick={handleLogin}
-                                className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-transparent hover:border-2 transition duration-300"
+                                className="inline-flex items-center justify-center h-10 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white border border-indigo-600 shadow w-full hover:from-blue-700 hover:to-indigo-700 transition"
                             >
                                 Login
                             </button>

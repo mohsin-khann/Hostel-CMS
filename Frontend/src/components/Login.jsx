@@ -88,22 +88,37 @@ const LoginForm = () => {
           setToken(res.data.token)
           console.log(token)
           localStorage.setItem('token',res.data.token)
-          if(role=="Admin"){
+          if(role==="Admin"){
             console.log("admin")
             toast.success("loggedIn Successfully!");
             nav("/admin/panel");
             return
           }
-          if(role=="Agent"){
+          if(role==="Agent"){
             console.log("agent")
             toast.success("loggedIn Successfully!");
             nav("/browse/card");
             return
           }
-          if(role=="Ordinary"){
+          if(role==="Ordinary"){
             console.log("ord")
             toast.success("loggedIn Successfully!");
             nav("/browse/card");
+            return
+          }
+          if(role==="Warden"){
+            toast.success("loggedIn Successfully!");
+            nav("/warden/panel");
+            return
+          }
+          if(role==="Employee"){
+            toast.success("loggedIn Successfully!");
+            nav("/employee/panel");
+            return
+          }
+          if(role==="Provost"){
+            toast.success("loggedIn Successfully!");
+            nav("/provost/panel");
             return
           }
         } catch (error) {
@@ -209,15 +224,18 @@ const LoginForm = () => {
                 >
                   First Name
                 </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  ref={firstName}
-                  placeholder="Enter your full name"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+               <input
+  type="text"
+  id="firstName"
+  name="firstName"
+  ref={firstName}
+  placeholder="Enter your full name"
+  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  required
+  pattern="[A-Za-z\s]+"
+/>
+
+
               </div>
               <div>
                 <label
@@ -234,6 +252,7 @@ const LoginForm = () => {
                   placeholder="Enter your full name"
                   className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
+                  pattern="[A-Za-z\s]+"
                 />
               </div>
               <div>
@@ -247,9 +266,11 @@ const LoginForm = () => {
                   <option >
                     Select your Account Type
                   </option>
-                  <option value="Ordinary">Ordinary</option>
-                  <option value="Agent">Agent</option>
-                  <option value="Admin">Admin</option>
+                  <option value="Ordinary">Student</option>
+                  <option value="Employee">Employee</option>
+                  <option value="Warden">Warden</option>
+                  <option value="Provost">Provost</option>
+              
                 </select>
 
                 <label
@@ -271,23 +292,19 @@ const LoginForm = () => {
             </div>
 
             {/* Email */}
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Email address
-              </label>
-              <input
-                type="email"
-                id="email"
-                ref={email}
-                name="email"
-                placeholder="Enter your email"
-                className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
+ <input
+  type="email"
+  id="email"
+  ref={email}
+  name="email"
+  placeholder="Enter your email"
+  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  required
+  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+  title="Enter a valid email address (e.g. user@example.com)"
+/>
+
+
 
             {/* Password and Confirm Password */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">

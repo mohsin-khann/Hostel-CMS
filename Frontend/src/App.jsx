@@ -2,6 +2,7 @@ import './App.css';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AppContext } from './context/AppContext';
+
 import LoginForm from './components/Login';
 import Chatbot from "./components/chatbot/chatbot";
 import ChatbotIcon from "./components/chatbot/chatButton";
@@ -15,29 +16,38 @@ import Account from './components/Account';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/ABout';
-import Admin from './components/Admin'; // Admin panel component
-import AdminPanel from './components/AdminPanel'; // Admin panel component
-import User from './components/User'
+import Admin from './components/Admin';
+import AdminPanel from './components/AdminPanel';
+import WardenPanel from './components/WardenPanel';
+import EmployeePanel from './components/EmployeePanel';
+import DeputyProvostPanel from './components/DeputyProvostPanel';
+import ProvostPanel from './components/ProvostPanel';
+import User from './components/User';
+import ErrorBoundary from './components/ErrorBoundary';
+
 const App = () => {
   const [showBot, setShowBot] = useState(false);
-  const { role } = useContext(AppContext); // Access the user from context
-  console.log(role)
+  const { role } = useContext(AppContext);
+
+  // wait for context
+  if (role === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  const isLoggedIn = role !== null;
+
   const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      path: "/login",
-      element: <LoginForm />,
-    },
-    {
-      path: "/about",
-      element: <About />,
-    },
+    { path: "/", element: <Home /> },
+    { path: "/login", element: <LoginForm /> },
+    { path: "/about", element: <About /> },
+
     {
       path: "/browse",
-      element: <Browse />,
+      element: isLoggedIn ? <Browse /> : <Navigate to="/login" replace />,
       children: [
         { path: "card", element: <Cards /> },
         { path: "complaints", element: <Complaint /> },
@@ -45,42 +55,82 @@ const App = () => {
         { path: "account", element: <Account /> },
       ],
     },
-    {
-      path: "/wait",
-      element: <OTPVerification />,
-    },
-    {
-      path: "/success",
-      element: <SuccessScreen />,
-    },
+
+    { path: "/wait", element: <OTPVerification /> },
+    { path: "/success", element: <SuccessScreen /> },
+
     {
       path: "/admin",
       element: role === "Admin" ? <Admin /> : <Navigate to="/login" replace />,
-      children: role === "Admin" && [
+      children: [
         { path: "panel", element: <AdminPanel /> },
         { path: "user", element: <User /> },
         { path: "account", element: <Account /> },
+        { path: "*", element: <Navigate to="panel" replace /> },
       ],
     },
 
+    {
+      path: "/warden",
+      element: role === "Warden" ? <Admin /> : <Navigate to="/login" replace />,
+      children: [
+        { path: "panel", element: <WardenPanel /> },
+        { path: "account", element: <Account /> },
+        { path: "*", element: <Navigate to="panel" replace /> },
+      ],
+    },
+
+    {
+      path: "/employee",
+      element: role === "Employee" ? <Admin /> : <Navigate to="/login" replace />,
+      children: [
+        { path: "panel", element: <EmployeePanel /> },
+        { path: "account", element: <Account /> },
+        { path: "*", element: <Navigate to="panel" replace /> },
+      ],
+    },
+
+    {
+      path: "/provost",
+      element: role === "Provost" ? <Admin /> : <Navigate to="/login" replace />,
+      children: [
+        { path: "panel", element: <ProvostPanel /> },
+        { path: "account", element: <Account /> },
+        { path: "*", element: <Navigate to="panel" replace /> },
+      ],
+    },
+
+    {
+      path: "/deputy-provost",
+      element: role === "DeputyProvost" ? <Admin /> : <Navigate to="/login" replace />,
+      children: [
+        { path: "panel", element: <DeputyProvostPanel /> },
+        { path: "account", element: <Account /> },
+        { path: "*", element: <Navigate to="panel" replace /> },
+      ],
+    },
+
+    { path: "*", element: <Navigate to="/" replace /> },
   ]);
 
   return (
-    <>
-   
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      {!showBot && (
-        <button className="bot-button" onClick={() => setShowBot(true)}>
-          <ChatbotIcon />
-        </button>
-      )}
 
-      {/* Chatbot */}
-      {showBot && (
-        <Chatbot closeBot={() => setShowBot(false)} />
-      )}
-      <RouterProvider router={router} />
-    </>
+      <div className="flex-1 overflow-hidden relative">
+        {!showBot && (
+          <button className="bot-button" onClick={() => setShowBot(true)}>
+            <ChatbotIcon />
+          </button>
+        )}
+
+        {showBot && <Chatbot closeBot={() => setShowBot(false)} />}
+
+        <ErrorBoundary>
+          <RouterProvider router={router} />
+        </ErrorBoundary>
+      </div>
+    </div>
   );
 };
 

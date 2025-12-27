@@ -1,5 +1,4 @@
-import React from "react";
-import Footer from "./Footer";
+import  Footer from "./Footer";
 
 const About = () => {
     return (
@@ -102,13 +101,13 @@ const About = () => {
                     <div className="flex flex-col sm:flex-row justify-center gap-8">
                         <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-xs">
                             <p className="text-gray-400 mb-4">
-                                "The Complaint Management System has been a game changer for us. The ease of submitting and tracking complaints has greatly improved our customer service efficiency."
+                                &quot;The Complaint Management System has been a game changer for us. The ease of submitting and tracking complaints has greatly improved our customer service efficiency.
                             </p>
                             <p className="text-indigo-400 font-semibold">John Doe, Support Team</p>
                         </div>
                         <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-xs">
                             <p className="text-gray-400 mb-4">
-                                "As an admin, I love the streamlined dashboard that allows me to manage complaints quickly. The real-time updates keep everything running smoothly."
+                                &quot;As an admin, I love the streamlined dashboard that allows me to manage complaints quickly. The real-time updates keep everything running smoothly.
                             </p>
                             <p className="text-indigo-400 font-semibold">Jane Smith, Admin</p>
                         </div>

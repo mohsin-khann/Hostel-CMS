@@ -111,4 +111,80 @@ const isAgent = async (req, res, next) => {
     }
 }
 
-export { auth, isAdmin, isAgent, isOrdinary };
+// Warden
+const isWarden = async (req, res, next) => {
+    try {
+        if (req.user.accountType !== "Warden") {
+            return res.status(401).json({
+                success: false,
+                message: "Protected route for Warden.",
+            })
+        }
+        next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Not a Warden.",
+            error: error
+        })
+    }
+}
+
+// Employee
+const isEmployee = async (req, res, next) => {
+    try {
+        if (req.user.accountType !== "Employee") {
+            return res.status(401).json({
+                success: false,
+                message: "Protected route for Employee.",
+            })
+        }
+        next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Not an Employee.",
+            error: error
+        })
+    }
+}
+
+// Provost
+const isProvost = async (req, res, next) => {
+    try {
+        if (req.user.accountType !== "Provost") {
+            return res.status(401).json({
+                success: false,
+                message: "Protected route for Provost.",
+            })
+        }
+        next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Not a Provost.",
+            error: error
+        })
+    }
+}
+
+// Deputy Provost
+const isDeputyProvost = async (req, res, next) => {
+    try {
+        if (req.user.accountType !== "DeputyProvost") {
+            return res.status(401).json({
+                success: false,
+                message: "Protected route for Deputy Provost.",
+            })
+        }
+        next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Not a Deputy Provost.",
+            error: error
+        })
+    }
+}
+
+export { auth, isAdmin, isAgent, isOrdinary, isWarden, isEmployee, isProvost, isDeputyProvost };

@@ -1,57 +1,90 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Content from './Content'
-import Footer from './Footer';
-import Team from './Team';
+import { useNavigate } from "react-router-dom";
+import Content from "./Content";
+import Footer from "./Footer";
+import Team from "./Team";
 
 const Home = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleClick = () => {
-        navigate('/login');
-    };
+  return (
+    <div className="flex flex-col">
+      {/* HERO */}
+      <section
+        className="relative min-h-[85vh] flex items-center justify-center px-6"
+        style={{
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=2000&q=80)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/75" />
 
-    return (
-        <div className='flex flex-col'>
-            <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 text-white">
-                {/* Main Content */}
-                <div className="flex flex-col items-center justify-center flex-grow">
-                    {/* Title Section */}
-                    <div className="mb-4 text-center">
-                        <h1 className="text-5xl font-extrabold tracking-tight">
-                            Reflex<span className="text-blue-600">CMS</span>
-                        </h1>
-                    </div>
+        {/* content */}
+        <div className="relative z-10 max-w-4xl text-center text-white">
+          <p className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs tracking-wider uppercase">
+            Complaint Management System
+          </p>
 
-                    {/* Subtitle Section */}
-                    <div className="mb-6 text-center">
-                        <h3 className="text-xl font-medium italic text-gray-300">
-                            Fast, Flexible, Flawless
-                        </h3>
-                    </div>
+          <h1 className="mt-6 text-4xl md:text-6xl font-extrabold leading-tight">
+            Reflex<span className="text-blue-400">CMS</span>
+          </h1>
 
-                    {/* Button Section */}
-                    <div>
-                        <button
-                            onClick={handleClick}
-                            className="px-6 py-3 text-lg font-semibold text-blue-600 border-2 border-blue-600 rounded-lg shadow-lg hover:bg-blue-500 hover:text-white transition-all duration-300"
-                        >
-                            GET STARTED
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <Content />
-            </div>
-            <div>
-                <Team />
-            </div>
-            <div>
-                <Footer />
-            </div>
+          <p className="mt-4 text-base md:text-lg text-white/80">
+            Smart, Fast, Reliable — manage complaints, route them instantly, and track resolution end-to-end.
+          </p>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => navigate("/login")}
+              className="w-full sm:w-auto rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white shadow-md hover:bg-blue-700 hover:shadow-lg transition"
+            >
+              Get Started
+            </button>
+
+            <button
+              onClick={() => navigate("/about")}
+              className="w-full sm:w-auto rounded-xl border border-white/30 bg-white/10 px-6 py-3 font-semibold text-white hover:bg-white/20 transition"
+            >
+              Learn More
+            </button>
+          </div>
         </div>
-    );
+      </section>
+
+      {/* QUICK HIGHLIGHTS */}
+      <section className="bg-white">
+        <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
+            <h3 className="text-lg font-semibold">Role-based Routing</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Forward complaints to Warden, Employee, Deputy Provost, or Provost with remarks.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
+            <h3 className="text-lg font-semibold">Status Tracking</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              New → Pending → In Progress → Closed with clear accountability.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition">
+            <h3 className="text-lg font-semibold">Simple & Professional</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Clean UI designed for demos, reports, and final evaluation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* KEEP YOUR EXISTING SECTIONS */}
+      <Content />
+      <Team />
+      <Footer />
+    </div>
+  );
 };
 
 export default Home;

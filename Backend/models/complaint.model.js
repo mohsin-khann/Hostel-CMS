@@ -20,6 +20,16 @@ const complaintSchema = new mongoose.Schema(
             required: true,
             default: "new", // Default status
         },
+        forwardedTo: {
+            type: String,
+            enum: ["Warden", "Employee", "DeputyProvost", "Provost"],
+            default: null,
+            index: true,
+        },
+        remarksByWarden: { type: String },
+        remarksByEmployee: { type: String },
+        remarksByDeputyProvost: { type: String },
+        remarksByProvost: { type: String },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

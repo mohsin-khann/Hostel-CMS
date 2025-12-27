@@ -6,7 +6,8 @@ import {
      getAllUsers, 
      getUserById, 
      updateUserById, 
-     updateUserPassword
+     updateUserPassword,
+     updateUserAccountType
 } from '../controllers/user.controller.js'; // Adjust path as needed
 import { auth, isAdmin, isOrdinary } from '../middlewares/auth.middleware.js';
 
@@ -19,6 +20,6 @@ router.get('/getUser/:id', auth, getUserById);
 router.delete('/deleteUser/:id', auth,isAdmin, deleteUserById); 
 router.put('/updateUser/:id',auth, updateUserById); 
 router.put('/resetPass/:id',auth, updateUserPassword);
-
+router.put('/updateAccountType/:id', auth, isAdmin, updateUserAccountType);
 
 export default router;

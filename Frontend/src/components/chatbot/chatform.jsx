@@ -39,7 +39,7 @@ const ChatForm = ({ setChatHistory }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzdjYzA5NGJlYzQwM2JmY2RhZDBkNTQiLCJlbWFpbCI6Im1hbGlrbWFqZWVkemlhQGdtYWlsLmNvbSIsImFjY291bnRUeXBlIjoiT3JkaW5hcnkiLCJpYXQiOjE3MzYyNjcyNjMsImV4cCI6MTczNjI3NDQ2M30.T2x6hlhBFJsLKiTt_jaKpYb2CG25jHQi9olinwP73nY`,
+          Authorization: `AIzaSyDxiIBSoa7AQa2FcCGkngJSxKh7z2LWzFM`,
         },
         data: {
           contents: [

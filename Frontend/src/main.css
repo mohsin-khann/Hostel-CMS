@@ -12,7 +12,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #f4f6f9;
+  background-color: #ffffff;
+  color: #111111;
   overflow-x: hidden;
 }
 
@@ -35,13 +36,13 @@ body {
 
 .login-title {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 1rem;
-  color: #333;
+  color: #111;
 }
 
 .login-title span {
-  color: #4a90e2;
+  color: #111;
 }
 
 .input-group {
@@ -53,13 +54,13 @@ body {
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #333;
+  color: #111;
 }
 
 .input-group input {
   width: 100%;
   padding: 0.8rem;
-  border: 1px solid #ccc;
+  border: 1px solid #000;
   border-radius: 5px;
   font-size: 1rem;
 }
@@ -70,7 +71,7 @@ body {
 }
 
 .forgot-password a {
-  color: #4a90e2;
+  color: #000;
   text-decoration: none;
   font-size: 0.9rem;
 }
@@ -82,9 +83,9 @@ body {
 .btn-signin {
   width: 100%;
   padding: 0.8rem;
-  background-color: #4a90e2;
+  background-color: #000;
   color: #fff;
-  border: none;
+  border: 1px solid #000;
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
@@ -92,7 +93,8 @@ body {
 }
 
 .btn-signin:hover {
-  background-color: #357ab7;
+  background-color: #fff;
+  color: #000;
 }
 
 .register-link {
@@ -100,7 +102,7 @@ body {
 }
 
 .register-link a {
-  color: #4a90e2;
+  color: #000;
   text-decoration: none;
   font-weight: bold;
 }
@@ -136,7 +138,7 @@ body {
 
 /* Chat Header */
 .chat-header {
-  background-color: #6f46eb;
+  background-color: #000;
   color: #fff;
   padding: 16px;
   display: flex;
@@ -155,7 +157,7 @@ body {
   background-color: #fff;
   border-radius: 50%;
   padding: 5px;
-  color: #6f46eb;
+  color: #000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -211,7 +213,7 @@ body {
 
 .message-text {
   max-width: 80%;
-  background-color: #e9e7fc;
+  background-color: #eeeeee;
   border-radius: 12px;
   padding: 12px 16px;
   font-size: 14px;
@@ -220,7 +222,7 @@ body {
 }
 
 .user-message .message-text {
-  background-color: #6f46eb;
+  background-color: #000;
   color: #fff;
   border-top-right-radius: 0;
 }
@@ -235,7 +237,7 @@ body {
   background-color: #fff;
   border-radius: 50%;
   padding: 5px;
-  fill: #6f46eb;
+  fill: #000;
   margin: 0 5px;
 }
 
@@ -267,12 +269,12 @@ body {
 }
 
 .message-input:focus {
-  border-color: #6f46eb;
-  box-shadow: 0 0 4px rgba(111, 70, 235, 0.5);
+  border-color: #000;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
 .chat-footer button {
-  background-color: #6f46eb;
+  background-color: #000;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -287,8 +289,8 @@ body {
 }
 
 .chat-footer button:hover {
-  background-color: #5a36c3;
-  box-shadow: 0 4px 8px rgba(90, 54, 195, 0.3);
+  background-color: #111;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }
 
 .chat-footer img {
@@ -329,7 +331,7 @@ body {
 
 /* Bot button at the bottom right */
 .bot-button {
-  background-color: #007bff;
+  background-color: #000;
   border: none;
   border-radius: 50%;
   padding: 15px;
@@ -345,7 +347,7 @@ body {
 }
 
 .bot-button:hover {
-  background-color: #0056b3;
+  background-color: #111;
   transform: scale(1.1);
 }
 

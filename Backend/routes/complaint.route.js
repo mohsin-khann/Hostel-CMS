@@ -30,8 +30,13 @@ import {
     updateComplaint,
     updateComplaintStatus,
     deleteComplaint,
+    forwardComplaint,
+    addWardenRemarks,
+    addEmployeeRemarks,
+    addDeputyProvostRemarks,
+    addProvostRemarksAndClose,
 } from "../controllers/complaint.controller.js";
-import { auth,isAdmin } from "../middlewares/auth.middleware.js";
+import { auth,isAdmin, isWarden, isEmployee, isDeputyProvost, isProvost } from "../middlewares/auth.middleware.js";
 // import multer from "multer";
 
 // // Initialize multer
@@ -56,5 +61,14 @@ router.put('/update-status/:id', auth, updateComplaintStatus);
 
 // Route to delete a complaint
 router.delete('/deleteComplaint/:id', auth, deleteComplaint);
+
+// Forwarding routes
+router.put('/forward/:id', auth, forwardComplaint); // Admin -> Warden/Employee/DeputyProvost/Provost, Warden/Employee -> Provost, DeputyProvost -> Provost
+
+// Remarks routes
+router.put('/remarks/warden/:id', auth, isWarden, addWardenRemarks);
+router.put('/remarks/employee/:id', auth, isEmployee, addEmployeeRemarks);
+router.put('/remarks/deputyprovost/:id', auth, isDeputyProvost, addDeputyProvostRemarks);
+router.put('/remarks/provost/:id', auth, isProvost, addProvostRemarksAndClose);
 
 export default router;

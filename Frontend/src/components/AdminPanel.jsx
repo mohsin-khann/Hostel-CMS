@@ -1,151 +1,175 @@
-
-import { useState, useEffect } from "react";
+import AdminLayout from "./AdminLayout";
+import Sidebar from "./Sidebar";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
 import API from "../../api/api";
 
-function AdminPanel() {
+export default function AdminPanel() {
   const [complaints, setComplaints] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [page, setPage] = useState(1);
+  const perPage = 6;
 
-  const getUser = async () => {
+  const fetched = useRef(false);
+
+  useEffect(() => {
+    if (fetched.current) return;
+    fetched.current = true;
+
+    API.get("/complaint/getAllComplaints")
+      .then((res) => setComplaints(res.data.complaints))
+      .catch(() => toast.error("Cannot load complaints"));
+  }, []);
+
+  const filtered = complaints.filter(
+    (c) =>
+      c.description.toLowerCase().includes(search.toLowerCase()) &&
+      (statusFilter === "All" || c.status === statusFilter)
+  );
+
+  const pages = Math.ceil(filtered.length / perPage);
+  const data = filtered.slice((page - 1) * perPage, page * perPage);
+
+  const updateStatus = async (id, status) => {
     try {
-      const res = await API.get("/complaint/getAllComplaints");
-      setComplaints(res.data.complaints);
-    } catch (error) {
-      console.error(error);
-      toast.error("Cannot get complaints...");
+      await API.put(`/complaint/update-status/${id}`, { status });
+      setComplaints((p) =>
+        p.map((c) => (c._id === id ? { ...c, status } : c))
+      );
+    } catch {
+      toast.error("Status update failed");
     }
   };
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const filteredComplaints = complaints.filter(
-    (complaint) =>
-      complaint.description.toLowerCase().includes(search.toLowerCase()) &&
-      (statusFilter === "All" || complaint.status === statusFilter)
-  );
-
-  const pageCount = Math.ceil(filteredComplaints.length / itemsPerPage);
-  const paginatedComplaints = filteredComplaints.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handleStatusChange = async (complaintId, newStatus) => {
+  const forward = async (id, role) => {
     try {
-      const data = { status: newStatus };
-      const res = await API.put(`/complaint/update-status/${complaintId}`, data);
-      if (res.data.success) {
-        setComplaints((prevComplaints) =>
-          prevComplaints.map((complaint) =>
-            complaint._id === complaintId
-              ? { ...complaint, status: newStatus }
-              : complaint
-          )
-        );
-        toast.success("Status updated successfully");
-      } else {
-        throw new Error("Failed to update status");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Cannot update status...");
+      await API.put(`/complaint/forward/${id}`, { target: role });
+      setComplaints((p) =>
+        p.map((c) => (c._id === id ? { ...c, forwardedTo: role } : c))
+      );
+    } catch {
+      toast.error("Forward failed");
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6 ml-64"> {/* Added margin-left */}
-      {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-        <input
-          type="text"
-          placeholder="Search complaints..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-1/3 px-6 py-3 text-lg border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full md:w-1/5 px-6 py-3 text-lg border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-        >
-          <option value="All">All</option>
-          <option value="pending">Pending</option>
-          <option value="progress">In Progress</option>
-          <option value="closed">Closed</option>
-        </select>
-      </div>
+    <AdminLayout sidebar={<Sidebar />}>
+      {/* LEFT-ALIGNED CONTAINER (no mx-auto) */}
+      <div className="max-w-none pl-2 pr-6 space-y-6">
+        {/* SEARCH + FILTER */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search complaints..."
+            className="w-full md:w-[55%] rounded border px-4 py-2"
+          />
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {paginatedComplaints.map((complaint, index) => (
-          <div
-            key={complaint._id}
-            className="border border-gray-200 rounded-lg shadow-lg p-8 bg-white transition-transform transform hover:scale-105"
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full md:w-60 rounded border px-4 py-2"
           >
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-semibold text-gray-800">{complaint.title}</h3>
-              <span
-                className={`text-xs font-medium px-4 py-2 rounded-full ${complaint.status === "pending"
-                  ? "bg-yellow-100 text-yellow-600"
-                  : complaint.status === "progress"
-                    ? "bg-blue-100 text-blue-600"
-                    : "bg-green-100 text-green-600"
-                  }`}
-              >
-                {complaint.status}
-              </span>
+            <option value="All">All</option>
+            <option value="new">New</option>
+            <option value="pending">Pending</option>
+            <option value="progress">In Progress</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+
+        {/* BIGGER / WIDER CARDS */}
+        <div className="grid gap-8 xl:grid-cols-2">
+          {data.map((c, i) => (
+            <div
+              key={c._id}
+              className="rounded-xl border bg-white p-6 shadow-md"
+            >
+              <div className="flex justify-between items-start">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {c.title}
+                </h3>
+                <span className="text-sm font-medium text-blue-600 uppercase">
+                  {c.status}
+                </span>
+              </div>
+
+              <p className="mt-3 text-base text-gray-600 line-clamp-3">
+                {c.description}
+              </p>
+
+              <div className="mt-5 space-y-4">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-500">S.No: {i + 1}</span>
+                  <select
+                    value={c.status}
+                    onChange={(e) =>
+                      updateStatus(c._id, e.target.value)
+                    }
+                    className="rounded-md border px-3 py-1"
+                  >
+                    <option value="new">New</option>
+                    <option value="pending">Pending</option>
+                    <option value="progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {["Warden", "Employee", "DeputyProvost", "Provost"].map(
+                    (r) => (
+                      <button
+                        key={r}
+                        onClick={() => forward(c._id, r)}
+                        className="rounded-lg bg-indigo-600 px-3 py-2 text-sm text-white hover:bg-indigo-700 transition"
+                      >
+                        {r}
+                      </button>
+                    )
+                  )}
+                </div>
+
+                {c.forwardedTo && (
+                  <p className="text-sm text-gray-500">
+                    Assigned to{" "}
+                    <span className="font-medium text-blue-600">
+                      {c.forwardedTo}
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
-            <p className="text-md text-gray-600 mt-3">{complaint.description}</p>
-            <div className="flex justify-between items-center mt-5">
-              <span className="text-sm text-gray-500">S.No: {index + 1}</span>
-              <select
-                value={complaint.status}
-                onChange={(e) => handleStatusChange(complaint._id, e.target.value)}
-                className="px-4 py-3 text-lg border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-              >
-                <option value="pending">Pending</option>
-                <option value="progress">In Progress</option>
-                <option value="closed">Closed</option>
-              </select>
-            </div>
+          ))}
+        </div>
+
+        {/* PAGINATION */}
+        <div className="flex justify-between items-center pt-4">
+          <p className="text-sm text-gray-500">
+            Showing {(page - 1) * perPage + 1}–
+            {Math.min(page * perPage, filtered.length)} of{" "}
+            {filtered.length}
+          </p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
+              disabled={page === 1}
+              className="rounded-md border p-2"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={() => setPage((p) => Math.min(p + 1, pages))}
+              disabled={page === pages}
+              className="rounded-md border p-2"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-8">
-        <div className="text-md text-gray-600">
-          Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-          {Math.min(currentPage * itemsPerPage, filteredComplaints.length)} of{" "}
-          {filteredComplaints.length} results
-        </div>
-        <div className="flex space-x-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-5 py-3 border rounded-lg shadow-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
-            disabled={currentPage === pageCount}
-            className="px-5 py-3 border rounded-lg shadow-sm text-gray-600 hover:bg-gray-100 disabled:opacity-50"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
-
-export default AdminPanel;
-
